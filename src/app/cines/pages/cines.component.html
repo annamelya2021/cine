@@ -1,13 +1,19 @@
 <div class="container mx-auto px-4 py-8">
   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+
     <div *ngFor="let movie of movies" class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col m-2">
-      <img [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path" alt="{{ movie.title }}"
-           class="w-full h-64 object-contain">
+      <img [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path" alt="{{ movie.title }}" class="w-full h-64 object-contain">
       <div class="p-4 flex-grow">
         <h2 class="text-xl font-bold">{{ movie.title }}</h2>
         <p class="text-gray-600">{{ movie.overview | slice:0:100 }}...</p>
         <span class="text-gray-500">Rating: {{ movie.vote_average }}</span>
+
+
+        <div *ngIf="getGenres(movie.genre_ids).length > 0">
+          <strong>Genres:</strong> {{ getGenres(movie.genre_ids).join(', ') }}
+        </div>
       </div>
+
       <div class="mt-4 flex justify-between gap-2">
         <button (click)="openModal(movie)" class="bg-blue-500 text-white px-3 py-2 rounded hover:bg-blue-600 w-full sm:w-auto">
           <i class="fas fa-info-circle"></i>
@@ -27,7 +33,12 @@
     <div class="bg-white rounded-lg p-6 w-11/12 md:w-1/2">
       <h2 class="text-xl font-bold">{{ selectedMovie.title }}</h2>
       <p>{{ selectedMovie.overview }}</p>
-      <button (click)="closeModal()" class="mt-4 bg-gray-500 text-white px-3 py-2 rounded"><i class="fa fa-window-close" aria-hidden="true"></i></button>
+      <div *ngIf="getGenres(selectedMovie.genre_ids).length > 0">
+        <strong>Genres:</strong> {{ getGenres(selectedMovie.genre_ids).join(', ') }}
+      </div>
+      <button (click)="closeModal()" class="mt-4 bg-gray-500 text-white px-3 py-2 rounded">
+        <i class="fa fa-window-close"></i> Close
+      </button>
     </div>
   </div>
 </div>

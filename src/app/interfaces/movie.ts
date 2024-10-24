@@ -8,4 +8,5 @@ export interface Movie {
   release_date: string;
   genre_ids: number[];
   trailer_url?: string;
+
 }
