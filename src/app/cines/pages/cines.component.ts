@@ -9,14 +9,18 @@ import { Movie } from '../../interfaces/movie';
 })
 export class CinesComponent implements OnInit {
   movies: Movie[] = [];
+  filteredMovies: Movie[] = [];
   selectedMovie: Movie | null = null;
   genres: any[] = [];
+  selectedGenreId: number | null = null;
+  activeGenre: string | null = null;
 
   constructor(private movieService: MovieService) {}
 
   ngOnInit(): void {
     this.movieService.getMovies().subscribe((data: any) => {
       this.movies = data.results;
+      this.filteredMovies = this.movies;
     });
 
     this.movieService.getGenres().subscribe(response => {
@@ -35,18 +39,29 @@ export class CinesComponent implements OnInit {
     }).filter(name => name !== null);
   }
 
- openModal(movie: Movie) {
-  this.selectedMovie = movie;
+  openModal(movie: Movie) {
+    this.selectedMovie = movie;
 
-  // Завантажуємо трейлер для вибраного фільму
- this.movieService.getMovieTrailer(movie.id).subscribe((trailerUrl: string | null) => {
-  if (this.selectedMovie && trailerUrl !== null) {
-    this.selectedMovie.trailer_url = trailerUrl;
   }
-});
-}
 
   closeModal() {
     this.selectedMovie = null;
+  }
+
+   addToCarrito(movie: Movie) {
+console.log('Carrito y mapa', movie);
+  }
+
+  filterMovies(genreId: number) {
+    this.selectedGenreId = genreId;
+    const selectedGenre = this.genres.find(genre => genre.id === genreId);
+    this.activeGenre = selectedGenre ? selectedGenre.name : null;
+    this.filteredMovies = this.movies.filter(movie => movie.genre_ids.includes(genreId));
+  }
+
+  resetFilter() {
+    this.selectedGenreId = null;
+    this.activeGenre = null;
+    this.filteredMovies = this.movies;
   }
 }

@@ -1,43 +1,56 @@
 <div class="container mx-auto px-4 py-8">
-  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+  <div class="flex flex-wrap mb-4">
+    <button *ngFor="let genre of genres"
+            (click)="filterMovies(genre.id)"
+            [ngClass]="{'bg-blue-700': selectedGenreId === genre.id, 'bg-blue-500': selectedGenreId !== genre.id}"
+            class="text-white px-4 py-2 rounded mr-2 mb-2 hover:bg-blue-600 transition duration-300 ease-in-out">
+      {{ genre.name }}
+    </button>
+    <button (click)="resetFilter()"
+            class="bg-gray-500 text-white px-4 py-2 rounded mb-2 hover:bg-gray-600 transition duration-300 ease-in-out">
+      Reset
+    </button>
+  </div>
 
-    <div *ngFor="let movie of movies" class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col m-2">
+  <div *ngIf="activeGenre" class="mb-4">
+    <strong>Género seleccionado:</strong> {{ activeGenre }}
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <div *ngFor="let movie of filteredMovies" class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col m-2">
       <img [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path" alt="{{ movie.title }}" class="w-full h-64 object-contain">
       <div class="p-4 flex-grow">
         <h2 class="text-xl font-bold">{{ movie.title }}</h2>
         <p class="text-gray-600">{{ movie.overview | slice:0:100 }}...</p>
         <span class="text-gray-500">Rating: {{ movie.vote_average }}</span>
-
-
         <div *ngIf="getGenres(movie.genre_ids).length > 0">
-          <strong>Genres:</strong> {{ getGenres(movie.genre_ids).join(', ') }}
+          <strong>Géneros:</strong> {{ getGenres(movie.genre_ids).join(', ') }}
         </div>
       </div>
-
-      <div class="mt-4 flex justify-between gap-2">
-        <button (click)="openModal(movie)" class="bg-blue-500 text-white px-3 py-2 rounded hover:bg-blue-600 w-full sm:w-auto">
+      <div class="mt-4 flex justify-between gap-4 p-4">
+        <button (click)="openModal(movie)" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out w-full sm:w-auto">
           <i class="fas fa-info-circle"></i>
         </button>
-        <button class="bg-green-500 text-white px-3 py-2 rounded hover:bg-green-600 w-full sm:w-auto">
-          <i class="fas fa-heart"></i>
-        </button>
-        <button class="bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600 w-full sm:w-auto">
+        <button (click)="addToCarrito(movie)" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-300 ease-in-out w-full sm:w-auto">
           <i class="fas fa-ticket-alt"></i>
         </button>
       </div>
     </div>
-  </div>
 
+    <div *ngIf="filteredMovies.length === 0" class="col-span-4 text-center text-gray-500">
+      No se encontraron películas para el género seleccionado.
+    </div>
+  </div>
 
   <div *ngIf="selectedMovie" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
     <div class="bg-white rounded-lg p-6 w-11/12 md:w-1/2">
       <h2 class="text-xl font-bold">{{ selectedMovie.title }}</h2>
       <p>{{ selectedMovie.overview }}</p>
       <div *ngIf="getGenres(selectedMovie.genre_ids).length > 0">
-        <strong>Genres:</strong> {{ getGenres(selectedMovie.genre_ids).join(', ') }}
+        <strong>Géneros:</strong> {{ getGenres(selectedMovie.genre_ids).join(', ') }}
       </div>
-      <button (click)="closeModal()" class="mt-4 bg-gray-500 text-white px-3 py-2 rounded">
-        <i class="fa fa-window-close"></i> Close
+      <button (click)="closeModal()" class="mt-4 bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition duration-300 ease-in-out">
+        <i class="fa fa-window-close"></i> Cerrar
       </button>
     </div>
   </div>
