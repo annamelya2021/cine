@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { Error404Component } from './shared/pages/error404/error404.component';
 
 const routes: Routes = [
-
+/*  */
    {
     path: 'cines',
     loadChildren: () => import('./cines/cines.module').then( m => m.CinesModule),
