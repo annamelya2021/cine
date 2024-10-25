@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { MovieService } from '../../services/movie.service';
 import { Movie } from '../../interfaces/movie';
+import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-populares',
@@ -10,13 +11,52 @@ import { Movie } from '../../interfaces/movie';
 export class PopularesComponent implements OnInit {
   popularMovies: Movie[] = [];
   selectedMovie: Movie | null = null;
+  searchQuery = '';
+  private searchSubject = new Subject<string>();
+  currentPage = 1;
 
   constructor(private movieService: MovieService) {}
 
   ngOnInit(): void {
-    this.movieService.getPopularMovies().subscribe((data: any) => {
-      this.popularMovies = data.results;
+    this.loadPopularMovies();
+
+    // Налаштування обробки пошуку з debounce
+    this.searchSubject.pipe(
+      debounceTime(500),
+      distinctUntilChanged()
+    ).subscribe(query => {
+      this.currentPage = 1;
+      this.searchMovies(query);
     });
+  }
+
+  onSearchInput(): void {
+    this.searchSubject.next(this.searchQuery);
+  }
+
+  loadPopularMovies(): void {
+    this.movieService.getPopularMovies(this.currentPage).subscribe((data: any) => {
+      this.popularMovies = this.currentPage === 1 ? data.results : [...this.popularMovies, ...data.results];
+    });
+  }
+
+  searchMovies(query: string) {
+    if (query) {
+      this.movieService.searchMovies(query, this.currentPage).subscribe((data: any) => {
+        this.popularMovies = this.currentPage === 1 ? data.results : [...this.popularMovies, ...data.results];
+      });
+    } else {
+      this.loadPopularMovies();
+    }
+  }
+
+  @HostListener("window:scroll", [])
+  onScroll(): void {
+    // Виклик додаткового завантаження при досягненні кінця сторінки
+    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 100) {
+      this.currentPage++;
+      this.searchQuery ? this.searchMovies(this.searchQuery) : this.loadPopularMovies();
+    }
   }
 
   openModal(movie: Movie) {
@@ -28,6 +68,6 @@ export class PopularesComponent implements OnInit {
   }
 
   addToFavorites(movie: Movie) {
-console.log('favoritos', movie);
+    console.log('Favoritos', movie);
   }
 }
