@@ -19,8 +19,6 @@ export class PopularesComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadPopularMovies();
-
-    // Налаштування обробки пошуку з debounce
     this.searchSubject.pipe(
       debounceTime(500),
       distinctUntilChanged()
@@ -52,7 +50,6 @@ export class PopularesComponent implements OnInit {
 
   @HostListener("window:scroll", [])
   onScroll(): void {
-    // Виклик додаткового завантаження при досягненні кінця сторінки
     if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 100) {
       this.currentPage++;
       this.searchQuery ? this.searchMovies(this.searchQuery) : this.loadPopularMovies();
