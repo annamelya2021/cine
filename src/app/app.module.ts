@@ -8,6 +8,7 @@ import { CinesComponent } from './cines/pages/cines.component';
 import { FavoritosComponent } from './favoritos/pages/favoritos.component';
 import { CarritoComponent } from './carrito/pages/carrito.component';
 import { PopularesComponent } from './populares/pages/populares.component';
+import { CinesModule } from './cines/cines.module';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,9 @@ import { PopularesComponent } from './populares/pages/populares.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    SharedModule
+    SharedModule,
+    CinesModule,
+
   ],
   providers: [],
   bootstrap: [AppComponent]

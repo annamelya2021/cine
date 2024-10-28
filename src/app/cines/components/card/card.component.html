@@ -1,0 +1,16 @@
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col m-2">
+  <img [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path" alt="{{ movie.title }}" class="w-full h-64 object-contain">
+  <div class="p-4 flex-grow">
+    <h2 class="text-xl font-bold">{{ movie.title }}</h2>
+    <p class="text-gray-600">{{ movie.overview | slice:0:100 }}...</p>
+    <span class="text-gray-500">Rating: {{ movie.vote_average }}</span>
+    <div *ngIf="getGenres(movie.genre_ids).length > 0">
+      <strong>Géneros:</strong> {{ getGenres(movie.genre_ids).join(', ') }}
+    </div>
+  </div>
+  <div class="mt-4 flex justify-between gap-4 p-4">
+    <ng-content></ng-content>
+  </div>
+</div>
+
