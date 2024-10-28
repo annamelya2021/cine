@@ -1,17 +1,18 @@
 <div class="container mx-auto px-4 py-8">
-  <div class="flex flex-wrap mb-4">
-    <button *ngFor="let genre of genres"
-            (click)="filterMovies(genre.id)"
-            [ngClass]="{'bg-blue-700': selectedGenreId === genre.id, 'bg-blue-500': selectedGenreId !== genre.id}"
-            class="text-white px-4 py-2 rounded mr-2 mb-2 hover:bg-blue-600 transition duration-300 ease-in-out">
-      {{ genre.name }}
-    </button>
-    <button (click)="resetFilter()"
-            class="bg-gray-500 text-white px-4 py-2 rounded mb-2 hover:bg-gray-600 transition duration-300 ease-in-out">
-      Reset
-    </button>
-  </div>
+<div class="flex flex-wrap mb-4">
+  <button *ngFor="let genre of genres"
+          (click)="filterMovies(genre.id)"
+          [ngClass]="{'bg-gray-400': selectedGenreId === genre.id, 'bg-gray-500': selectedGenreId !== genre.id}"
+          class="text-white px-2 py-1 rounded-sm mr-2 mb-2 hover:bg-gray-700 transition duration-300 ease-in-out text-sm">
+    {{ genre.name }}
+  </button>
+ <button (click)="resetFilter()"
+        class="bg-gray-400 border border-gray-500 text-white px-2 py-1 rounded-sm mb-2 ml-8 hover:bg-gray-600 hover:border-gray-700 transition duration-300 ease-in-out text-sm">
+  Reset
+</button>
+</div>
 
+ <app-carousel></app-carousel>
   <div *ngIf="activeGenre" class="mb-4">
     <strong>Género seleccionado:</strong> {{ activeGenre }}
   </div>
@@ -36,11 +37,28 @@
         </button>
       </div>
     </div>
-
-    <div *ngIf="filteredMovies.length === 0" class="col-span-4 text-center text-gray-500">
-      No se encontraron películas para el género seleccionado.
-    </div>
   </div>
+
+  <div *ngIf="filteredMovies.length === 0" class="col-span-4 text-center text-gray-500">
+    No se encontraron películas para el género seleccionado.
+  </div>
+</div>
+
+
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+  <app-card *ngFor="let movie of filteredMovies" [movie]="movie" [genres]="genres"> <!-- Передай жанри сюди -->
+    <button (click)="openModal(movie)" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out w-full sm:w-auto">
+      <i class="fas fa-info-circle"></i>
+    </button>
+    <button (click)="addToCarrito(movie)" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-300 ease-in-out w-full sm:w-auto">
+      <i class="fas fa-ticket-alt"></i>
+    </button>
+  </app-card>
+</div>
+
+</div>
+
 
   <div *ngIf="selectedMovie" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
     <div class="bg-white rounded-lg p-6 w-11/12 md:w-1/2">
@@ -54,4 +72,4 @@
       </button>
     </div>
   </div>
-</div>
+
