@@ -8,6 +8,10 @@ const routes: Routes = [
     path: 'cines',
     loadChildren: () => import('./cines/cines.module').then( m => m.CinesModule),
   },
+    {
+    path: 'salas',
+    loadChildren: () => import('./salas/salas.module').then( m => m.SalasModule),
+  },
    {
      path: 'favoritos',
      loadChildren: () => import('./favoritos/favoritos.module').then( m => m.FavoritosModule),
@@ -27,7 +31,7 @@ const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'populares',
+    redirectTo: 'cines',
     pathMatch: 'full'
   },
   {

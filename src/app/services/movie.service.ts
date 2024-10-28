@@ -37,4 +37,6 @@ export class MovieService {
   searchMovies(query: string, page: number = 1): Observable<any> {
     return this.http.get(`${this.searchUrl}?api_key=${this.apiKey}&query=${query}&language=es-ES&page=${page}`);
   }
+
+
 }

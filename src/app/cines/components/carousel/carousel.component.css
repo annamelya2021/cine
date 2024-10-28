@@ -1,4 +1,4 @@
-/* .carousel-container {
+.carousel-container {
   margin-top: 50px;
   margin-bottom: 50px;
 }
@@ -6,6 +6,7 @@
 .carousel-wrapper {
   position: relative;
   width: 100%;
+  overflow: hidden;
 }
 
 .carousel-inner {
@@ -14,8 +15,27 @@
 }
 
 .movie-card {
-  flex: 0 0 33.33%;
   box-sizing: border-box;
+  flex: 0 0 100%;
+}
+
+
+@media (min-width: 640px) {
+  .movie-card {
+    flex: 0 0 50%;
+  }
+}
+
+@media (min-width: 768px) {
+  .movie-card {
+    flex: 0 0 33.33%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .movie-card {
+    flex: 0 0 25%;
+  }
 }
 
 .movie-content {
@@ -28,4 +48,4 @@
 
 .movie-content:hover {
   transform: scale(1.05);
-} */
+}

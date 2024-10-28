@@ -1,26 +1,24 @@
 <div class="bg-blue-600 text-white p-4">
   <div class="container mx-auto flex justify-between items-center">
-    <!-- Логотип або назва додатку -->
-    <!-- <span class="text-xl font-bold">My App</span> -->
 
-    <!-- Бургер-меню для мобільних пристроїв -->
     <button class="block md:hidden" (click)="toggleMenu()">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
       </svg>
     </button>
 
-    <!-- Навігація для більших екранів -->
+
     <nav class="hidden md:flex space-x-4 flex-grow justify-center">
       <button routerLink="/cines" class="text-white hover:bg-blue-500 px-3 py-2 rounded">Peliculas en cine</button>
+      <button routerLink="/salas" class="text-white hover:bg-blue-500 px-3 py-2 rounded">Nustras salas</button>
       <button routerLink="/populares" class="text-white hover:bg-blue-500 px-3 py-2 rounded">Peliculas populares</button>
       <button routerLink="/favoritos" class="text-white hover:bg-blue-500 px-3 py-2 rounded">Favoritos</button>
       <button routerLink="/carrito" class="text-white hover:bg-blue-500 px-3 py-2 rounded">Carrito</button>
     </nav>
 
-    <!-- Мобільне меню (відображається при відкритті бургер-меню) -->
     <nav *ngIf="isMenuOpen" class="block md:hidden mt-4 space-y-2">
       <button routerLink="/cines" class="text-white hover:bg-blue-500 block w-full text-left px-3 py-2 rounded">Peliculas en cine</button>
+       <button routerLink="/salas" class="text-white hover:bg-blue-500 block w-full text-left px-3 py-2 rounded">Nustras salas</button>
       <button routerLink="/populares" class="text-white hover:bg-blue-500 block w-full text-left px-3 py-2 rounded">Peliculas populares</button>
       <button routerLink="/favoritos" class="text-white hover:bg-blue-500 block w-full text-left px-3 py-2 rounded">Favoritos</button>
       <button routerLink="/carrito" class="text-white hover:bg-blue-500 block w-full text-left px-3 py-2 rounded">Carrito</button>

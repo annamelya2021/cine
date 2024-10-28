@@ -15,21 +15,21 @@ export class CarouselComponent implements OnInit {
 
   ngOnInit() {
     this.loadMovies();
-    this.startAutoSlide();
+    this.startAutoSlide()
   }
 
   loadMovies() {
     this.movieService.getMovies().subscribe((data: any) => {
       this.movies = data.results
         .sort(() => Math.random() - 0.5)
-        .slice(0, 8);
+        .slice(0, 10);
     });
   }
 
   startAutoSlide() {
     setInterval(() => {
       this.nextSlide();
-    }, 3000);
+    }, 2000);
   }
 
   get transformStyle() {

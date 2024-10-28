@@ -7,6 +7,6 @@ export interface Movie {
   vote_count: number;
   release_date: string;
   genre_ids: number[];
-  trailer_url?: string;
-
+  trailer_url?: string | null;
 }
+

@@ -9,6 +9,8 @@ import { FavoritosComponent } from './favoritos/pages/favoritos.component';
 import { CarritoComponent } from './carrito/pages/carrito.component';
 import { PopularesComponent } from './populares/pages/populares.component';
 import { CinesModule } from './cines/cines.module';
+import { SalasComponent } from './salas/salas.component';
+import { SalasModule } from './salas/salas.module';
 
 @NgModule({
   declarations: [
@@ -16,13 +18,15 @@ import { CinesModule } from './cines/cines.module';
     CinesComponent,
     FavoritosComponent,
     CarritoComponent,
-    PopularesComponent
+    PopularesComponent,
+    SalasComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     SharedModule,
     CinesModule,
+    SalasModule
 
   ],
   providers: [],

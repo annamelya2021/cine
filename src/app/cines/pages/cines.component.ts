@@ -10,58 +10,99 @@ import { Movie } from '../../interfaces/movie';
 export class CinesComponent implements OnInit {
   movies: Movie[] = [];
   filteredMovies: Movie[] = [];
-  selectedMovie: Movie | null = null;
   genres: any[] = [];
   selectedGenreId: number | null = null;
-  activeGenre: string | null = null;
+  filterByRating: boolean = false;
+  filterByNewest: boolean = false;
+  selectedMovie: Movie | null = null;
 
   constructor(private movieService: MovieService) {}
 
   ngOnInit(): void {
     this.movieService.getMovies().subscribe((data: any) => {
       this.movies = data.results;
-      this.filteredMovies = this.movies;
+      this.applyFilters();
     });
-
     this.movieService.getGenres().subscribe(response => {
       this.genres = response.genres;
     });
   }
 
-  getGenres(movieGenreIds: number[]): string[] {
-    if (!this.genres || this.genres.length === 0) {
-      return [];
+  filterMovies(event: Event): void {
+    const target = event.target as HTMLSelectElement;
+    const genreId = target.value;
+    this.selectedGenreId = genreId ? parseInt(genreId, 10) : null;
+    this.applyFilters();
+  }
+
+  getGenreName(genreId: number): string {
+  const genre = this.genres.find(g => g.id === genreId);
+  return genre ? genre.name : 'Невідомий жанр';
+}
+  toggleRatingFilter(event: Event): void {
+    this.filterByRating = (event.target as HTMLInputElement).checked;
+    this.applyFilters();
+  }
+
+  toggleNewestFilter(event: Event): void {
+    this.filterByNewest = (event.target as HTMLInputElement).checked;
+    this.applyFilters();
+  }
+
+  resetFilter(): void {
+    this.selectedGenreId = null;
+    this.filterByRating = false;
+    this.filterByNewest = false;
+
+    // Скидаємо значення селектора
+    const genreSelect = document.getElementById('genreSelect') as HTMLSelectElement;
+    if (genreSelect) {
+      genreSelect.selectedIndex = 0;
     }
 
-    return movieGenreIds.map(id => {
-      const genre = this.genres.find(genre => genre.id === id);
-      return genre ? genre.name : null;
-    }).filter(name => name !== null);
+    // Очищуємо чекбокси
+    const ratingFilter = document.getElementById('ratingFilter') as HTMLInputElement;
+    const newestFilter = document.getElementById('newestFilter') as HTMLInputElement;
+    if (ratingFilter) {
+      ratingFilter.checked = false;
+    }
+    if (newestFilter) {
+      newestFilter.checked = false;
+    }
+
+    this.applyFilters();
   }
 
-  openModal(movie: Movie) {
-    this.selectedMovie = movie;
+  applyFilters(): void {
+    this.filteredMovies = this.movies;
 
+    if (this.selectedGenreId !== null) {
+      this.filteredMovies = this.filteredMovies.filter(movie =>
+        movie.genre_ids.includes(this.selectedGenreId ?? 0)
+      );
+    }
+
+    if (this.filterByRating) {
+      this.filteredMovies = this.filteredMovies.filter(movie => movie.vote_average >= 7);
+    }
+
+    if (this.filterByNewest) {
+      this.filteredMovies = this.filteredMovies.sort((a, b) =>
+        new Date(b.release_date).getTime() - new Date(a.release_date).getTime()
+      );
+    }
   }
 
-  closeModal() {
+openModal(movie: Movie): void {
+  this.selectedMovie = movie;
+
+}
+
+  closeModal(): void {
     this.selectedMovie = null;
   }
 
-   addToCarrito(movie: Movie) {
-console.log('Carrito y mapa', movie);
-  }
-
-  filterMovies(genreId: number) {
-    this.selectedGenreId = genreId;
-    const selectedGenre = this.genres.find(genre => genre.id === genreId);
-    this.activeGenre = selectedGenre ? selectedGenre.name : null;
-    this.filteredMovies = this.movies.filter(movie => movie.genre_ids.includes(genreId));
-  }
-
-  resetFilter() {
-    this.selectedGenreId = null;
-    this.activeGenre = null;
-    this.filteredMovies = this.movies;
+  addToCarrito(movie: Movie): void {
+    console.log('Carrito', movie);
   }
 }
