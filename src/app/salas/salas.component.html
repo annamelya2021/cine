@@ -1,1 +1,13 @@
-<p>salas works!</p>
+
+<div class="halls-container">
+  <h2 class="text-2xl font-bold">Nuestras s</h2>
+  <div *ngFor="let hall of halls" class="hall-card bg-gray-800 text-white p-4 rounded-lg mt-4">
+    <h3 class="text-xl font-semibold">{{ hall.name }}</h3>
+    <p>Capacidad: {{ hall.capacity }}</p>
+    <p>Tipos de asientos: {{ hall.seatTypes.join(', ') }}</p>
+    <p>Horarios:</p>
+    <ul>
+      <li *ngFor="let time of hall.schedule">{{ time }}</li>
+    </ul>
+  </div>
+</div>
