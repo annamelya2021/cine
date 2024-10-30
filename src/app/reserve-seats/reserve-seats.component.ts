@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 interface Seat {
   id: string;
@@ -26,7 +26,7 @@ export class ReserveSeatsComponent implements OnInit {
   regularSeatPrice: number = 10;
   vipSeatPrice: number = 20;
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
@@ -79,8 +79,10 @@ export class ReserveSeatsComponent implements OnInit {
   }
 
   purchaseTickets(): void {
-    prompt(`Gracias por la compra! Escribe tu coreo para enviar tus tickets! Total: ${this.totalPrice} EUR, cantidad: ${this.selectedSeats.length}`);
-    this.resetSelection();
+    prompt(`Gracias por la compra! Escribe tu coreo para enviar tus tickets! Total: ${this.totalPrice} EUR, tickets: ${this.selectedSeats.length}`);
+    // this.resetSelection();
+    this.router.navigate(['/cines']);
+
   }
 
   resetSelection(): void {
