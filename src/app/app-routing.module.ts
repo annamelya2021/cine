@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { Error404Component } from './shared/pages/error404/error404.component';
+import { ReserveSeatsComponent } from './reserve-seats/reserve-seats.component';
 
 const routes: Routes = [
 /*  */
@@ -23,7 +24,12 @@ const routes: Routes = [
 {
   path: 'carrito',
   loadChildren: () => import('./carrito/carrito.module').then( m => m.CarritoModule),
-},
+  },
+  {
+    path: 'reserve',
+    loadChildren: () => import('./reserve-seats/reserve-seats.module').then( m => m.ReserveSeatsModule),
+  },
+
 
   {
     path: '404',

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MovieService } from '../../services/movie.service';
 import { Movie } from '../../interfaces/movie';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-cines',
@@ -16,18 +17,43 @@ export class CinesComponent implements OnInit {
   filterByNewest: boolean = false;
   selectedMovie: Movie | null = null;
 
-  constructor(private movieService: MovieService) {}
+  constructor(private movieService: MovieService, private router: Router) {}
 
   ngOnInit(): void {
     this.movieService.getMovies().subscribe((data: any) => {
-      this.movies = data.results;
+      this.movies = data.results.map((movie: any) => {
+        return {
+          ...movie,
+          sessions: this.generateRandomSessions(),
+          runtime: movie.runtime || 0,
+          origin_country: movie.origin_country || '',
+          director: movie.director || '',
+        };
+      });
       this.applyFilters();
     });
+
     this.movieService.getGenres().subscribe(response => {
       this.genres = response.genres;
     });
   }
 
+generateRandomSessions(): { time: string; hall: string }[] {
+  const halls = ['Sala Bilbao', 'Sala Barcelona'];
+  const times = ['10:00', '12:00', '14:00', '16:00', '18:00', '20:00'];
+
+  const numberOfSessions = Math.floor(Math.random() * 2) + 2;
+
+  const shuffledTimes = times.sort(() => 0.5 - Math.random());
+
+
+  const selectedTimes = shuffledTimes.slice(0, numberOfSessions);
+
+  return selectedTimes.map(time => {
+    const hall = halls[Math.floor(Math.random() * halls.length)];
+    return { time, hall };
+  });
+}
   filterMovies(event: Event): void {
     const target = event.target as HTMLSelectElement;
     const genreId = target.value;
@@ -36,9 +62,10 @@ export class CinesComponent implements OnInit {
   }
 
   getGenreName(genreId: number): string {
-  const genre = this.genres.find(g => g.id === genreId);
-  return genre ? genre.name : 'Невідомий жанр';
-}
+    const genre = this.genres.find(g => g.id === genreId);
+    return genre ? genre.name : 'Невідомий жанр';
+  }
+
   toggleRatingFilter(event: Event): void {
     this.filterByRating = (event.target as HTMLInputElement).checked;
     this.applyFilters();
@@ -54,13 +81,10 @@ export class CinesComponent implements OnInit {
     this.filterByRating = false;
     this.filterByNewest = false;
 
-    // Скидаємо значення селектора
     const genreSelect = document.getElementById('genreSelect') as HTMLSelectElement;
     if (genreSelect) {
       genreSelect.selectedIndex = 0;
     }
-
-    // Очищуємо чекбокси
     const ratingFilter = document.getElementById('ratingFilter') as HTMLInputElement;
     const newestFilter = document.getElementById('newestFilter') as HTMLInputElement;
     if (ratingFilter) {
@@ -93,16 +117,23 @@ export class CinesComponent implements OnInit {
     }
   }
 
-openModal(movie: Movie): void {
-  this.selectedMovie = movie;
-
-}
+  openModal(movie: Movie): void {
+    this.selectedMovie = movie;
+  }
 
   closeModal(): void {
     this.selectedMovie = null;
   }
 
-  addToCarrito(movie: Movie): void {
-    console.log('Carrito', movie);
+  // addToCarrito(movie: Movie): void {
+  //   console.log('Carrito', movie);
+  // }
+
+
+
+  selectSession(session: { time: string; hall: string }): void {
+    console.log(`el usuario seleccionó la sesión: ${session.time} в ${session.hall}`);
+  this.router.navigate(['/reserve'], { queryParams: { time: session.time, hall: session.hall } });
   }
+
 }

@@ -1,0 +1,53 @@
+<div class="flex flex-col items-center bg-gray-900 p-4 rounded-md shadow-lg h-screen w-full">
+  <h2 class="text-2xl font-bold text-white mb-4">{{ hall }} - Sesión: {{ sessionTime }}</h2>
+  <div class="screen bg-gray-700 text-white text-center p-2 w-full rounded mb-4">Pantalla</div>
+
+  <div class="flex flex-col gap-2 mb-4 overflow-y-auto">
+    <div *ngFor="let row of seats" class="flex justify-center gap-2">
+      <div
+        *ngFor="let seat of row"
+        [ngClass]="{
+          'seat': true,
+          'bg-yellow-500': seat.type === 'vip' && !seat.reserved,
+          'bg-gray-500': seat.selected,
+          'bg-red-500 cursor-not-allowed': seat.reserved,
+          'bg-gray-400': !seat.selected && !seat.reserved && seat.type === 'regular'
+        }"
+        (click)="selectSeat(seat)"
+        class="w-8 h-8 flex items-center justify-center text-xs font-medium text-gray-900 rounded cursor-pointer"
+      >
+        <span *ngIf="!seat.reserved; else reservedSeat">
+          <svg *ngIf="seat.selected" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 fill-current text-white" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+          <span *ngIf="!seat.selected">{{ seat.row }}-{{ seat.number }}</span>
+        </span>
+        <ng-template #reservedSeat>
+          <i class="fas fa-lock"></i>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+
+  <div class="legend flex space-x-4 mb-4 text-white">
+    <div class="flex items-center space-x-2">
+      <div class="w-4 h-4 bg-gray-400 rounded"></div><span>Standard</span>
+    </div>
+    <div class="flex items-center space-x-2">
+      <div class="w-4 h-4 bg-red-500 rounded"></div><span>Reservados</span>
+    </div>
+    <div class="flex items-center space-x-2">
+      <div class="w-4 h-4 bg-yellow-500 rounded"></div><span>VIP</span>
+    </div>
+  </div>
+
+  <div class="text-center text-white space-y-2">
+    <p>Selecionados : {{ selectedSeats.length }}</p>
+    <p>Total: {{ totalPrice }} EUR</p>
+    <button
+      (click)="purchaseTickets()"
+      [disabled]="selectedSeats.length === 0"
+      class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50"
+    >
+      Comprar
+    </button>
+  </div>
+</div>
