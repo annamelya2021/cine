@@ -43,8 +43,8 @@
     <i class="fas fa-ticket fa"></i>
     Horas y salas disponibles:</span></p>
   <ul>
-    <li *ngFor="let session of movie.sessions" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 w-full sm:w-auto m-2">
-      <i class="fas fa-clock"></i>
+    <li *ngFor="let session of movie.sessions" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 sm:w-auto m-2">
+      <!-- <i class="fas fa-clock"></i> -->
       <button href="#" (click)="selectSession(session)" title="Comprar entradas para {{ session.time }}">{{ session.time }} ({{ session.hall }})</button>
     </li >
   </ul>
@@ -77,3 +77,4 @@
     </div>
   </div>
 </div>
+

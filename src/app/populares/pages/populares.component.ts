@@ -64,7 +64,19 @@ export class PopularesComponent implements OnInit {
     this.selectedMovie = null;
   }
 
-  addToFavorites(movie: Movie) {
-    console.log('Favoritos', movie);
-  }
+    addToFavorites(movie: Movie) {
+      const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+      if (!Array.isArray(favorites)) {
+        localStorage.setItem('favorites', JSON.stringify([]));
+      }
+
+      if (!favorites.some((fav: Movie) => fav.id === movie.id)) {
+        favorites.push(movie);
+        localStorage.setItem('favorites', JSON.stringify(favorites));
+        alert('Añadido a favoritos:');
+      } else {
+        alert('El elemento ya existe en favoritos:');
+      }
+    }
+
 }

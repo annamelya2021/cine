@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { jsPDF } from 'jspdf';
+import QRCode from 'qrcode';
+
 
 interface Seat {
   id: string;
@@ -25,6 +28,7 @@ export class ReserveSeatsComponent implements OnInit {
 
   regularSeatPrice: number = 10;
   vipSeatPrice: number = 20;
+  showEmailModal: boolean = false;
 
   constructor(private route: ActivatedRoute, private router: Router) {}
 
@@ -78,11 +82,34 @@ export class ReserveSeatsComponent implements OnInit {
     }, 0);
   }
 
-  purchaseTickets(): void {
-    prompt(`Gracias por la compra! Escribe tu coreo para enviar tus tickets! Total: ${this.totalPrice} EUR, tickets: ${this.selectedSeats.length}`);
-    // this.resetSelection();
-    this.router.navigate(['/cines']);
 
+  downloadTicket(): void {
+    const doc = new jsPDF();
+    doc.text(`Sessión: ${this.sessionTime}`, 10, 10);
+    doc.text(`Sala: ${this.hall}`, 10, 20);
+    doc.text(`Asientos: ${this.selectedSeats.map(seat => `${seat.row}-${seat.number}`).join(', ')}`, 10, 30);
+    doc.text(`Total: ${this.totalPrice} EUR`, 10, 40);
+
+    QRCode.toDataURL(`Session: ${this.sessionTime}, Hall: ${this.hall}`)
+      .then(url => {
+        doc.addImage(url, 'JPEG', 10, 50, 50, 50);
+        doc.save('ticket.pdf');
+      })
+      .catch(err => console.error(err));
+
+    setTimeout(() => {
+      this.resetSelection();
+      this.router.navigate(['/cines']);
+    }, 2000);
+
+  }
+
+  openEmailModal(): void {
+    this.showEmailModal = true;
+  }
+
+  closeEmailModal(): void {
+    this.showEmailModal = false;
   }
 
   resetSelection(): void {
